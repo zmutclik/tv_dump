@@ -14,7 +14,7 @@ from app.utils.logs import LogServices
 
 
 from app.routers import (
-    main,
+    main,symbol
 )
 
 
@@ -53,6 +53,7 @@ app.mount("/static", StaticFiles(directory="files_static", html=False), name="st
 
 ### MAIN ###
 app.include_router(main.router)
+app.include_router(symbol.router)
 
 ###################################################################################################################
 
