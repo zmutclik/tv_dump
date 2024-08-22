@@ -18,6 +18,15 @@ class SymbolRepository:
             .first()
         )
 
+    def parse_id(self, data):
+        return (
+            data["symbol"]
+            + "_"
+            + str(data["timeframe"])
+            + "_"
+            + str(int(data["waktu"].timestamp() * 1000))
+        )
+
     def last(self, symbol: str, timeframe: int):
         return (
             self.session.query(self.MainTable)
@@ -31,13 +40,7 @@ class SymbolRepository:
 
     def create(self, dataIn):
         data = self.MainTable(**dataIn)
-        data.id = (
-            data.symbol
-            + "_"
-            + str(data.timeframe)
-            + "_"
-            + str(int(data.waktu.timestamp() * 1000))
-        )
+        data.id = self.parse_id(dataIn)
         data.waktu_date = data.waktu.date()
         data.waktu_time = data.waktu.time()
         self.session.add(data)
