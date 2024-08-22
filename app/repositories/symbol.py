@@ -32,7 +32,11 @@ class SymbolRepository:
     def create(self, dataIn):
         data = self.MainTable(**dataIn)
         data.id = (
-            data.symbol + "_" + str(data.timeframe) + "_" + str(data.waktu.timestamp())
+            data.symbol
+            + "_"
+            + str(data.timeframe)
+            + "_"
+            + str(int(data.waktu.timestamp() * 1000))
         )
         data.waktu_date = data.waktu.date()
         data.waktu_time = data.waktu.time()
