@@ -3,11 +3,14 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class SymbolSchemas(BaseModel):
+class SymbolDataInsertSchemas(BaseModel):
     symbol: str
-    waktu: datetime
     timeframe: int
+    waktu: datetime
     open: float
-    hight: float
+    high: float
     low: float
     close: float
+    volume: float
+    volume_ma: float
+    volume_delta: float

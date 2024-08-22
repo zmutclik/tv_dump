@@ -20,9 +20,9 @@ SECRET_TEXT = os.environ.get("SECRET_TEXT", "HxekWSNWYKyOsezYRQxFEJNgbUroNzDT")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 ALGORITHM = "HS256"
 #######################################################################################################################
-DB_IPADDRESS = os.environ.get("DB_IPADDRESS", "127.0.0.1")
+DB_IPADDRESS = os.environ.get("DB_IPADDRESS", "192.168.80.11")
 DB_PORT = os.environ.get("DB_PORT", "3307")
-DB_NAME = os.environ.get("DB_NAME", "db")
+DB_NAME = os.environ.get("DB_NAME", "tv_dump")
 DB_USER = os.environ.get("DB_APPUSER", "root")
 DB_PASS = os.environ.get("DB_APPPASS", "blackant")
 

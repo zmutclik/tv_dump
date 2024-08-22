@@ -1,23 +1,22 @@
 from sqlalchemy import Column, Integer, String, Date, Time, Float, DateTime
-from app.core.database import Base
+# from app.core.database import Base
 
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
+class SymbolTable(Base):
+    __tablename__ = "symbol"
 
-class Euro05Table(Base):
-    __tablename__ = "symbol_eur_05"
-
-    waktu = Column(Integer, primary_key=True, index=True)
+    id = Column(String(50), primary_key=True, index=True)
+    symbol = Column(String(50), index=True)
+    timeframe = Column(Integer, index=True)
+    waktu = Column(DateTime, index=True)
+    waktu_date = Column(Date, index=True)
+    waktu_time = Column(Time, index=True)
     open = Column(Float)
-    hight = Column(Float)
+    high = Column(Float)
     low = Column(Float)
     close = Column(Float)
-
-
-class Euro30Table(Base):
-    __tablename__ = "symbol_eur_30"
-
-    waktu = Column(Integer, primary_key=True, index=True)
-    open = Column(Float)
-    hight = Column(Float)
-    low = Column(Float)
-    close = Column(Float)
+    volume = Column(Float)
+    volume_ma = Column(Float)
+    volume_delta = Column(Float)
