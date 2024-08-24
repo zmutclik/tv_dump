@@ -1,0 +1,48 @@
+#######################################################################################################################
+services:
+#######################################################################################################################
+  db_app:
+    build: 
+      context: .
+      dockerfile: files/docker/dockerfile_db
+      args:
+        - DB_ROOTPASSWORD=${DB_ROOTPASSWORD}
+        - DB_APPUSER=${DB_APPUSER}
+        - DB_APPPASS=${DB_APPPASS}
+        - DB_NAME=${DB_NAME}
+    container_name: TV_DUMP_DB
+    hostname: gudangberkasdb
+    volumes:
+      - 'mysqldata:/var/lib/mysql/'
+      - 'dbbackups:/backups/mysql'
+      - './config/db.backup.cnf:/root/.my.cnf'
+      - './config/logrotate_backup.conf:/etc/logrotate_backup.conf'
+      - './config/logrotate_cron:/etc/crontab'
+    dns:
+      - ${DNS1}
+      - ${DNS2}
+    networks:
+      macvlan000:
+        ipv4_address: ${DB_IPADDRESS}
+#######################################################################################################################
+  ws_app:
+    build: 
+      context: .
+      dockerfile: files/docker/dockerfile_ws
+    container_name: TV_DUMP_APP
+    hostname: tvdump
+    volumes:
+      - './:/code/'
+      - 'datagudangberkas:/code/files/data'
+    dns:
+      - ${DNS1}
+      - ${DNS2}
+    networks:
+      macvlan000:
+        ipv4_address: ${APP_IPADDRESS}
+
+#######################################################################################################################
+networks:
+  macvlan000:
+    external:
+     name: ${MACVLAN}
