@@ -5,11 +5,10 @@ from dotenv import load_dotenv
 pathfile = os.path.normpath(os.path.dirname(os.path.abspath(__file__)) + os.sep)
 pathfile = os.path.abspath(os.path.join(pathfile, ".."))
 
-if os.path.exists(join(pathfile, ".env")):
+if not os.path.isfile(join(pathfile, ".env")):
     pathfile = os.path.abspath(os.path.join(pathfile, ".."))
     
 dotenv_path = join(pathfile, ".env")
-print(dotenv_path)
 
 load_dotenv(dotenv_path)
 
