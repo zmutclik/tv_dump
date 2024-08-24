@@ -13,8 +13,6 @@ services:
     container_name: TV_DUMP_DB
     hostname: gudangberkasdb
     volumes:
-      - 'mysqldata:/var/lib/mysql/'
-      - 'dbbackups:/backups/mysql'
       - './config/db.backup.cnf:/root/.my.cnf'
       - './config/logrotate_backup.conf:/etc/logrotate_backup.conf'
       - './config/logrotate_cron:/etc/crontab'
