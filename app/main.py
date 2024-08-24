@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.utils.files import getFile
 from app.core.env import APP_NAME, APP_DESCRIPTIOIN
+from app.core.celery import create_celery
 
 from app.utils import auth
 from app.utils.logs import LogServices
@@ -28,10 +29,12 @@ def create_app() -> FastAPI:
         # docs_url=None,
     )
 
+    current_app.celery_app = create_celery()
     return current_app
 
 
 app = create_app()
+celery = app.celery_app
 
 app.router.redirect_slashes = False
 

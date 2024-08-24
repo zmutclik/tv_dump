@@ -2,7 +2,8 @@ import os
 import uvicorn
 from dotenv import load_dotenv
 import argparse
-from subprocess import Popen
+
+import subprocess
 #######################################################################################################################
 parser = argparse.ArgumentParser(description="Start Applikasi.", epilog="Pilih Module yang mau diJalankan.")
 parser.add_argument("module", help="Pilih salah satu = ws, celery atau fower")
@@ -29,7 +30,7 @@ if __name__ == "__main__":
                 host=APP_URL,
                 reload_dirs=["app"],
                 workers=2,
-                # reload=True,
+                reload=False,
                 # log_level="warning",
                 # no_access_log=True,
                 # ssl_keyfile='config/ssl/privkey.pem',
@@ -44,6 +45,8 @@ if __name__ == "__main__":
                 reload_dirs=["app"],
             )
     
-    
-    # if args.module == "celery":
-        # exec( "python -m celery -A worker.celery.celery_app worker --loglevel=info"  )
+
+    if args.module == "celery":
+        # exec( "python -m celery -A app.main.celery worker --loglevel=info"  )
+        cmd = "python -m celery -A app.main.celery worker --loglevel=info".split(' ')
+        subprocess.Popen(cmd)

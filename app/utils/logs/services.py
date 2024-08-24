@@ -61,5 +61,6 @@ class LogServices:
         self.data.process_time = time.time() - self.startTime
         if self.clientId_new:
             response.set_cookie(key=self.clientId_key, value=self.data.client_id)
-
+        
+        response.headers["X-Process-Time"] = str(self.data.process_time)
         self.repository.create(self.data.model_dump())
