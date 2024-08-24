@@ -4,9 +4,9 @@ find . -type f -name ".env" -exec rm {} \;
 find ./config -type f -name "initfile.sql" -exec rm {} \;
 find ./config -type f -name "db.backup.cnf" -exec rm {} \;
 
-cp ./files/samples/.env.sample .env
-cp ./files/samples/initfile.sample.sql ./config/initfile.sql
-cp ./files/samples/db.backup.cnf ./config/db.backup.cnf
+cp ./files/example/.env.sample .env
+cp ./files/example/initfile.sample.sql ./config/initfile.sql
+cp ./files/example/db.backup.cnf ./config/db.backup.cnf
 
 #######################################################################################################################
 export DBAPPUSERX       =$(curl --silent https://randomuser.me/api/ | jq '.results[].login.username')
