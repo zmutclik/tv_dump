@@ -31,7 +31,6 @@ services:
     hostname: tvdump
     volumes:
       - './:/code/'
-      - 'datagudangberkas:/code/files/data'
     dns:
       - ${DNS1}
       - ${DNS2}
