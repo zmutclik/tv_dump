@@ -11,6 +11,17 @@ from app.schemas.symbol import SymbolDataInsertSchemas, SymbolDataUpdateSchemas
 celery_log = get_task_logger(__name__)
 
 
+def symbolSave(db: Session, dataIn: dict):
+    repo = SymbolRepository(db)
+    id = repo.parse_id(dataIn)
+    data = repo.get(id)
+    if data is not None:
+        data_update = SymbolDataUpdateSchemas(**dataIn)
+        repo.update(id, data_update.model_dump())
+    else:
+        SymbolRepository(db).create(dataIn)
+
+
 @shared_task(
     bind=True,
     autoretry_for=(Exception,),
@@ -18,16 +29,7 @@ celery_log = get_task_logger(__name__)
     retry_kwargs={"max_retries": 3},
     name="tv_dump:symbol_save",
 )
-def symbolSaveTasks(self, dataIn: dict):
+def symbolSaveTasks(self, dataIn: SymbolDataInsertSchemas):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
-            repo = SymbolRepository(db)
-            id = repo.parse_id(dataIn.model_dump())
-            data = repo.get(id)
-            if data is not None:
-                data_update = SymbolDataUpdateSchemas.model_validate(
-                    dataIn.model_dump()
-                )
-                repo.update(id, data_update.model_dump())
-            else:
-                SymbolRepository(db).create(dataIn.model_dump())
+            symbolSave(db, dataIn.model_dump())
