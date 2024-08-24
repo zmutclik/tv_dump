@@ -29,7 +29,7 @@ def symbolSave(db: Session, dataIn: dict):
     retry_kwargs={"max_retries": 3},
     name="tv_dump:symbol_save",
 )
-def symbolSaveTasks(self, dataIn: SymbolDataInsertSchemas):
+def symbolSaveTasks(self, dataIn: dict):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
-            symbolSave(db, dataIn.model_dump())
+            symbolSave(db, dataIn)
