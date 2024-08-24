@@ -37,6 +37,27 @@ services:
     networks:
       macvlan000:
         ipv4_address: ${APP_IPADDRESS}
+    depends_on:
+      - db_app
+
+#######################################################################################################################
+  celery_worker:
+    build: 
+      context: .
+      dockerfile: files/docker/dockerfile_celery
+    container_name: TV_DUMP_WORKER
+    command: celery -A app.main.celery worker --loglevel=info
+    volumes:
+      - './:/code/'
+    dns:
+      - ${DNS1}
+      - ${DNS2}
+    networks:
+      macvlan000:
+        ipv4_address: ${CELERY_IPADDRESS}
+    depends_on:
+      - ws_app
+      - db_app
 
 #######################################################################################################################
 networks:
