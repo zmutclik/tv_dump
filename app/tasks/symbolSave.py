@@ -22,8 +22,8 @@ def symbolSave(db: Session, dataIn: dict):
         repo.update(id, data_update.model_dump())
     else:
         SymbolRepository(db).create(dataIn)
-
-    checkBigVolumeTasks.apply_async(args=[id])
+    ids: str = id
+    checkBigVolumeTasks.apply_async(args=[ids])
 
 
 @shared_task(

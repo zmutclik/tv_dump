@@ -19,7 +19,7 @@ celery_log = get_task_logger(__name__)
 def checkBigVolumeTasks(self, id_symbol: str):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
-            symbol = SymbolRepository(db).get(id)
+            symbol = SymbolRepository(db).get(id_symbol)
             if symbol is not None:
                 volume_rasio = symbol.volume / symbol.volume_ma
                 if volume_rasio > 2.2 and symbol.timeframe == 30:
