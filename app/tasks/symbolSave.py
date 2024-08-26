@@ -7,6 +7,8 @@ from app.repositories import SymbolRepository
 
 from app.schemas.symbol import SymbolDataInsertSchemas, SymbolDataUpdateSchemas
 
+from app.tasks.checkBigVolume import checkBigVolumeTasks
+
 
 celery_log = get_task_logger(__name__)
 
@@ -20,6 +22,8 @@ def symbolSave(db: Session, dataIn: dict):
         repo.update(id, data_update.model_dump())
     else:
         SymbolRepository(db).create(dataIn)
+
+    checkBigVolumeTasks.apply_async(args=[id])
 
 
 @shared_task(

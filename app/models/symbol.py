@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, Time, Float, DateTime
-# from app.core.database import Base
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Time, TIMESTAMP, DateTime, func, case, Float, text
+from sqlalchemy.orm import column_property, relationship, deferred
+from app.models._base import Base
 
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
 
 class SymbolTable(Base):
     __tablename__ = "symbol"
@@ -20,3 +19,5 @@ class SymbolTable(Base):
     volume = Column(Float)
     volume_ma = Column(Float)
     volume_delta = Column(Float)
+
+    BIGVOLUME = relationship("BixVolumeTable", back_populates="SYMBOLS")
