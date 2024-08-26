@@ -15,15 +15,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for table db.bigvolume
-CREATE TABLE IF NOT EXISTS `bigvolume` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_symbol` varchar(50) NOT NULL DEFAULT '',
-  `status_open` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `status_open` (`status_open`) USING BTREE,
-  KEY `id_symbol` (`id_symbol`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+CREATE TABLE `bigvolume` (
+	`id` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`id_symbol` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`status_open` INT(11) NOT NULL DEFAULT '1',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `status_open` (`status_open`) USING BTREE,
+	INDEX `id_symbol` (`id_symbol`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Data exporting was unselected.
 
 -- Dumping structure for table db.signals

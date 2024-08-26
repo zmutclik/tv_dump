@@ -6,7 +6,7 @@ from app.models.__base import Base
 class BixVolumeTable(Base):
     __tablename__ = "bigvolume"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(String(50), primary_key=True, index=True)
     id_symbol = Column(String(50), ForeignKey("symbol.id"))
     status_open = Column(Boolean, default=True)
 

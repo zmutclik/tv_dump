@@ -9,7 +9,7 @@ class BigVolumeRepository:
         self.session: Session = db_session
         self.MainTable = BixVolumeTable
 
-    def get(self, id: int):
+    def get(self, id: str):
         return (
             self.session.query(self.MainTable)
             .filter(
