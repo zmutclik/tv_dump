@@ -4,6 +4,7 @@ from celery.utils.log import get_task_logger
 
 from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository
+from app.tasks.sendTelegram import SendTelegramTasks
 
 
 celery_log = get_task_logger(__name__)
@@ -24,3 +25,4 @@ def checkBigVolumeTasks(self, id_symbol: str):
                 volume_rasio = symbol.volume / symbol.volume_ma
                 if volume_rasio > 2.2 and symbol.timeframe == 30:
                     BigVolumeRepository(db).create({"id_symbol": id_symbol})
+                    SendTelegramTasks.apply_async(args=[id_symbol])
