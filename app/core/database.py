@@ -18,6 +18,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False)
 SessionLocal.configure(
     binds={
         models.SymbolTable: engine_db,
+        models.BixVolumeTable: engine_db,
     }
 )
 
