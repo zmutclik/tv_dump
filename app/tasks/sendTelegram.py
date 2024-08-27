@@ -41,6 +41,14 @@ def SendTelegramTasks(self, id_symbol: str):
                 )
 
 
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=True,
+    retry_kwargs={"max_retries": 3},
+    name="tv_dump:update_telegram",
+)
 def UpdateTelegramTasks(self, id_symbol: str, message_id: int):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
