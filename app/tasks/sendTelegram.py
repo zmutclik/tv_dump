@@ -35,7 +35,9 @@ def SendTelegramTasks(self, id_symbol: str):
                         symbol.volume_delta,
                     ),
                 )
-
+                print(botrespon)
+                print(botrespon["result"])
+                print(botrespon["result"]["message_id"])
                 BigVolumeRepository(db).update(
                     id_symbol, {"message_id": botrespon["result"]["message_id"]}
                 )
