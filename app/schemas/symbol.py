@@ -14,8 +14,8 @@ class SymbolDataUpdateSchemas(BaseModel):
     volume_delta: float
     candle_closed: Optional[bool] = False
 
-    created_at: datetime = None
-    updated_at: datetime = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class SymbolDataInsertSchemas(SymbolDataUpdateSchemas):
