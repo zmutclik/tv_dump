@@ -19,5 +19,7 @@ class SymbolTable(Base):
     volume = Column(Float)
     volume_ma = Column(Float)
     volume_delta = Column(Float)
+    created_at = Column(DateTime, default=func.now(), nullable=False)
+    updated_at = Column(DateTime, nullable=False)
 
     BIGVOLUME = relationship("BixVolumeTable", back_populates="SYMBOLS")

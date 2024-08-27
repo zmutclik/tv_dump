@@ -1,3 +1,4 @@
+from datetime import datetime
 from celery import shared_task
 from sqlalchemy.orm import Session
 from celery.utils.log import get_task_logger
@@ -19,9 +20,12 @@ def symbolSave(db: Session, dataIn: dict):
     data = repo.get(id)
     if data is not None:
         data_update = SymbolDataUpdateSchemas(**dataIn)
+        data_update.updated_at = datetime.now()
         repo.update(id, data_update.model_dump())
     else:
+        dataIn["created_at"] = datetime.now()
         SymbolRepository(db).create(dataIn)
+        
     checkBigVolumeTasks.apply_async(args=[id])
 
 

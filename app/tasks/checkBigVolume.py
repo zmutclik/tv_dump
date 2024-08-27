@@ -1,3 +1,4 @@
+from datetime import datetime
 from celery import shared_task
 from sqlalchemy.orm import Session
 from celery.utils.log import get_task_logger
@@ -27,5 +28,11 @@ def checkBigVolumeTasks(self, id_symbol: str):
                 if dataBidVolume is None:
                     volume_rasio = symbol.volume / symbol.volume_ma
                     if volume_rasio > 2.2 and symbol.timeframe == 30:
-                        BigVolumeRepo.create({"id": id_symbol, "id_symbol": id_symbol})
+                        BigVolumeRepo.create(
+                            {
+                                "id": id_symbol,
+                                "id_symbol": id_symbol,
+                                "created_at": datetime.now(),
+                            }
+                        )
                         SendTelegramTasks.apply_async(args=[id_symbol])
