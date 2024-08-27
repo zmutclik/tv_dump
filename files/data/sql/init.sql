@@ -15,14 +15,17 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for table db.bigvolume
-CREATE TABLE `bigvolume` (
-	`id` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
-	`id_symbol` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
-	`status_open` INT(11) NOT NULL DEFAULT '1',
-	PRIMARY KEY (`id`) USING BTREE,
-	INDEX `status_open` (`status_open`) USING BTREE,
-	INDEX `id_symbol` (`id_symbol`) USING BTREE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `bigvolume` (
+  `id` varchar(50) NOT NULL DEFAULT '',
+  `id_symbol` varchar(50) NOT NULL DEFAULT '',
+  `status_open` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `status_open` (`status_open`) USING BTREE,
+  KEY `id_symbol` (`id_symbol`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Data exporting was unselected.
 
 -- Dumping structure for table db.signals
@@ -62,6 +65,9 @@ CREATE TABLE IF NOT EXISTS `symbol` (
   `volume` float NOT NULL DEFAULT 0,
   `volume_ma` float NOT NULL DEFAULT 0,
   `volume_delta` float NOT NULL DEFAULT 0,
+  `candle_closed` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`) USING BTREE,
   KEY `symbol` (`symbol`) USING BTREE,
   KEY `timeframe` (`timeframe`) USING BTREE,
