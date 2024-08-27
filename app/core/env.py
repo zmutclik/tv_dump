@@ -23,6 +23,9 @@ APP_DESCRIPTIOIN = os.environ.get(
 SECRET_TEXT = os.environ.get("SECRET_TEXT", "HxekWSNWYKyOsezYRQxFEJNgbUroNzDT")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 ALGORITHM = "HS256"
+
+TELEGRAM_TOKEN  = os.environ.get("TELEGRAM_TOKEN", "")
+TELEGRAM_CHATID  = os.environ.get("TELEGRAM_CHATID", "")
 #######################################################################################################################
 DB_IPADDRESS = os.environ.get("DB__IPADDRESS", "192.168.80.11")
 DB_PORT = os.environ.get("DB_PORT", "3307")
