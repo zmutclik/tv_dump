@@ -36,9 +36,9 @@ def checkBigVolumeTasks(self, id_symbol: str):
                                 "created_at": datetime.now(),
                             }
                         )
-                        SendTelegramTasks.apply_async(args=[dataBidVolume.message_id])
+                        SendTelegramTasks.apply_async(args=[id_symbol])
                 else:
                     if dataBidVolume.message_id is not None:
                         UpdateTelegramTasks.apply_async(
-                            args=[dataBidVolume.message_id, dataBidVolume.message_id]
+                            args=[dataBidVolume.id, dataBidVolume.message_id]
                         )
