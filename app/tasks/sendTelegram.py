@@ -80,7 +80,7 @@ def telegram_bot_updatetext(bot_message, message_id):
         + "/editMessageText?chat_id="
         + bot_chatID
         + "&message_id="
-        + message_id
+        + str(message_id)
         + "&parse_mode=Markdown&text="
         + bot_message
     )
