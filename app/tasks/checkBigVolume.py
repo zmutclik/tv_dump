@@ -5,7 +5,7 @@ from celery.utils.log import get_task_logger
 
 from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository
-from app.tasks.sendTelegram import SendTelegramTasks
+from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks
 
 
 celery_log = get_task_logger(__name__)
@@ -23,9 +23,10 @@ def checkBigVolumeTasks(self, id_symbol: str):
         with Session(bind=connection) as db:
             BigVolumeRepo = BigVolumeRepository(db)
             dataBidVolume = BigVolumeRepo.get(id_symbol)
-            if dataBidVolume is None:
-                symbol = SymbolRepository(db).get(id_symbol)
-                if symbol is not None:
+
+            symbol = SymbolRepository(db).get(id_symbol)
+            if symbol is not None:
+                if dataBidVolume is None:
                     volume_rasio = symbol.volume / symbol.volume_ma
                     if volume_rasio > 2.2 and symbol.timeframe == 30:
                         BigVolumeRepo.create(
@@ -35,4 +36,9 @@ def checkBigVolumeTasks(self, id_symbol: str):
                                 "created_at": datetime.now(),
                             }
                         )
-                        SendTelegramTasks.apply_async(args=[id_symbol])
+                        SendTelegramTasks.apply_async(args=[dataBidVolume.message_id])
+                else:
+                    if dataBidVolume.message_id is not None:
+                        UpdateTelegramTasks.apply_async(
+                            args=[dataBidVolume.message_id, dataBidVolume.message_id]
+                        )

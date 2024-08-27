@@ -9,6 +9,7 @@ class BixVolumeTable(Base):
     id = Column(String(50), primary_key=True, index=True)
     id_symbol = Column(String(50), ForeignKey("symbol.id"))
     status_open = Column(Boolean, default=True)
+    message_id = Column(Integer)
     
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, nullable=False)
