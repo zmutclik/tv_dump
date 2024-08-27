@@ -19,13 +19,14 @@ def symbolSave(db: Session, dataIn: dict):
     id = repo.parse_id(dataIn)
     data = repo.get(id)
     if data is not None:
-        data_update = SymbolDataUpdateSchemas(**dataIn)
-        data_update.updated_at = datetime.now()
-        repo.update(id, data_update.model_dump())
+        if not data.candle_closed:
+            data_update = SymbolDataUpdateSchemas(**dataIn)
+            data_update.updated_at = datetime.now()
+            repo.update(id, data_update.model_dump())
     else:
         dataIn["created_at"] = datetime.now()
         SymbolRepository(db).create(dataIn)
-        
+
     checkBigVolumeTasks.apply_async(args=[id])
 
 

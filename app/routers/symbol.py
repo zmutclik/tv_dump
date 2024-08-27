@@ -12,15 +12,12 @@ router = APIRouter(prefix="", tags=["symbol"])
 
 
 @router.post("/symbol")
-async def save_direct(
-    dataIn: SymbolDataInsertSchemas,
-    db: Session = Depends(get_db),
-):
+async def save_direct(dataIn: SymbolDataInsertSchemas, closed: bool = False, db: Session = Depends(get_db)):
+    dataIn.candle_closed = closed
     symbolSave(db, dataIn.model_dump())
 
 
 @router.post("/symbol/v2")
-async def save_background(
-    dataIn: SymbolDataInsertSchemas,
-):
+async def save_background(dataIn: SymbolDataInsertSchemas, closed: bool = False):
+    dataIn.candle_closed = closed
     symbolSaveTasks.apply_async(args=[dataIn.model_dump()])

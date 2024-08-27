@@ -1,5 +1,5 @@
-from typing import Union
-from pydantic import BaseModel, root_validator
+from typing import Union, Optional
+from pydantic import BaseModel
 from datetime import datetime
 
 
@@ -12,6 +12,7 @@ class SymbolDataUpdateSchemas(BaseModel):
     volume_ma: float
     volume_delta: float
     volume_delta: float
+    candle_closed: Optional[bool] = False
 
     created_at: datetime = None
     updated_at: datetime = None

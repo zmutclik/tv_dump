@@ -19,6 +19,9 @@ class SymbolTable(Base):
     volume = Column(Float)
     volume_ma = Column(Float)
     volume_delta = Column(Float)
+    
+    candle_closed = Column(Boolean, default=False)
+
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, nullable=False)
 
