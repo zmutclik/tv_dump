@@ -30,10 +30,10 @@ def get_pesan(db: Session, id_symbol: str):
     if symbol is None:
         return False
     _pesan = pesan.format(symbol.symbol, symbol.open, symbol.high, symbol.low, symbol.close)
-
+    
     table = PrettyTable()
     table.field_names = ["days", "vol", "delta"]
-    for x in range(1, 8):
+    for x in range(8):
         last = repo.last(symbol.symbol, symbol.timeframe, (symbol.waktu_date - timedelta(days=x)), symbol.waktu_time)
         if last is not None:
             table.add_row([last.waktu_date.strftime("%a"), last.volume, last.volume_delta])
