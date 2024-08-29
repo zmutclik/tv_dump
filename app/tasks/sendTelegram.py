@@ -1,7 +1,7 @@
 from celery import shared_task
 from sqlalchemy.orm import Session
 from celery.utils.log import get_task_logger
-from prettytable import PrettyTable
+from prettytable import PrettyTable,SINGLE_BORDER
 
 import requests
 from datetime import datetime, date, timedelta
@@ -14,7 +14,7 @@ from app.core.env import TELEGRAM_CHATID, TELEGRAM_TOKEN
 celery_log = get_task_logger(__name__)
 
 
-pesan = '''<b><u>Big Volume Detected .!</u></b>
+pesan = """<b><u>Big Volume Detected .!</u></b>
 
 <b>{}</b>
 <code>open  : {}</code>
@@ -22,7 +22,7 @@ pesan = '''<b><u>Big Volume Detected .!</u></b>
 <code>low   : {}</code>
 <code>close : {}</code>
 
-'''
+"""
 
 
 def get_pesan(db: Session, id_symbol: str):
@@ -31,7 +31,6 @@ def get_pesan(db: Session, id_symbol: str):
     if symbol is None:
         return False
     _pesan = pesan.format(symbol.symbol, symbol.open, symbol.high, symbol.low, symbol.close)
-
     table = PrettyTable()
     table.field_names = ["days", "vol", "delta"]
     for x in range(8):
@@ -39,8 +38,8 @@ def get_pesan(db: Session, id_symbol: str):
         if last is not None:
             table.add_row([last.waktu_date.strftime("%a"), last.volume, last.volume_delta])
 
-    _pesan = _pesan + table.get_string()
-    return pesan
+    _pesan = _pesan + "<code>" + table.get_string() + "</code>\n"
+    return _pesan
 
 
 @shared_task(
