@@ -29,16 +29,7 @@ def get_pesan(db: Session, id_symbol: str):
     symbol = repo.get(id_symbol)
     if symbol is None:
         return False
-    _pesan = pesan.format(
-        symbol.symbol,
-        symbol.open,
-        symbol.high,
-        symbol.low,
-        symbol.close,
-        symbol.volume,
-        symbol.volume_ma,
-        symbol.volume_delta,
-    )
+    _pesan = pesan.format(symbol.symbol, symbol.open, symbol.high, symbol.low, symbol.close)
 
     table = PrettyTable()
     table.field_names = ["days", "vol", "delta"]
