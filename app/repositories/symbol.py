@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, time
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.models.symbol import SymbolTable
@@ -19,20 +19,16 @@ class SymbolRepository:
         )
 
     def parse_id(self, data):
-        return (
-            data["symbol"]
-            + "_"
-            + str(data["timeframe"])
-            + "_"
-            + str(int(data["waktu"].timestamp() * 1000))
-        )
+        return data["symbol"] + "_" + str(data["timeframe"]) + "_" + str(int(data["waktu"].timestamp() * 1000))
 
-    def last(self, symbol: str, timeframe: int):
+    def last(self, symbol: str, timeframe: int, waktu_date: date, waktu_time: time):
         return (
             self.session.query(self.MainTable)
             .filter(
                 self.MainTable.symbol == symbol,
                 self.MainTable.timeframe == timeframe,
+                self.MainTable.waktu_date == waktu_date,
+                self.MainTable.waktu_time == waktu_time,
             )
             .order_by(self.MainTable.waktu.desc())
             .first()

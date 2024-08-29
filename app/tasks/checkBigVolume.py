@@ -39,6 +39,18 @@ def checkBigVolumeTasks(self, id_symbol: str):
                         SendTelegramTasks.apply_async(args=[id_symbol])
                 else:
                     if dataBidVolume.message_id is not None:
-                        UpdateTelegramTasks.apply_async(
-                            args=[dataBidVolume.id, dataBidVolume.message_id]
-                        )
+                        UpdateTelegramTasks.apply_async(args=[dataBidVolume.id, dataBidVolume.message_id])
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=True,
+    retry_kwargs={"max_retries": 3},
+    name="tv_dump:checkBigVolumeOpenClose",
+)
+def checkBigVolumeOpenCloseTasks(self, symbol: str):
+    with engine_db.begin() as connection:
+        with Session(bind=connection) as db:
+            BigVolumeRepo = BigVolumeRepository(db)
+            dataBidVolume = BigVolumeRepo.get_opened(symbol)

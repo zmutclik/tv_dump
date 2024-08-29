@@ -28,6 +28,7 @@ markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
 passlib==1.7.4
+prettytable==3.11.0
 prometheus_client==0.20.0
 prompt_toolkit==3.0.47
 pyasn1==0.6.0
