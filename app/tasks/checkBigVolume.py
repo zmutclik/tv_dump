@@ -5,7 +5,7 @@ from celery.utils.log import get_task_logger
 
 from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository
-from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks
+from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks, telegram_bot_sendtext
 
 
 celery_log = get_task_logger(__name__)
@@ -55,3 +55,9 @@ def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):
             symbolnow = reposymbol.last(symbol, symbolcheck.timeframe)
             if symbolnow.close > symbolcheck.high or symbolnow.close < symbolcheck.low:
                 BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now()})
+
+                pesan = "{} udah break {} sekarang posisi di {}"
+                if symbolnow.close > symbolcheck.high:
+                    telegram_bot_sendtext(pesan.format(symbolnow.symbol, "HIGH", symbolnow.close), None, item.message_id)
+                if symbolnow.close < symbolcheck.high:
+                    telegram_bot_sendtext(pesan.format(symbolnow.symbol, "LOW", symbolnow.close), None, item.message_id)

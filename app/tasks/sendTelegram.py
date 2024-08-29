@@ -30,7 +30,7 @@ def get_pesan(db: Session, id_symbol: str):
     if symbol is None:
         return False
     _pesan = pesan.format(symbol.symbol, symbol.open, symbol.high, symbol.low, symbol.close)
-    
+
     table = PrettyTable()
     table.field_names = ["days", "vol", "delta"]
     for x in range(8):
@@ -73,18 +73,25 @@ def UpdateTelegramTasks(self, id_symbol: str, message_id: int):
                 botrespon = telegram_bot_sendtext(_pesan, message_id)
 
 
-def telegram_bot_sendtext(bot_message: str, message_id: str = None):
+def telegram_bot_sendtext(bot_message: str, message_id: str = None, reply_to_message_id: str = None):
     bot_token = TELEGRAM_TOKEN
     bot_chatID = TELEGRAM_CHATID
 
     url_param_1 = "sendMessage"
     url_param_2 = ""
+    url_param_3 = ""
+
     if message_id is not None:
         url_param_1 = "editMessageText"
         url_param_2 = "&message_id={}".format(message_id)
 
-    send_url = "https://api.telegram.org/bot{}/{}?chat_id={}&parse_mode=html{}&text={}"
-    send_text = send_url.format(bot_token, url_param_1, bot_chatID, url_param_2, bot_message)
+    if reply_to_message_id is not None:
+        url_param_1 = "sendMessage"
+        url_param_2 = ""
+        url_param_3 = "&reply_to_message_id={}".format(reply_to_message_id)
+
+    send_url = "https://api.telegram.org/bot{}/{}?chat_id={}&parse_mode=html{}&text={}{}"
+    send_text = send_url.format(bot_token, url_param_1, bot_chatID, url_param_2, bot_message, url_param_3)
 
     response = requests.get(send_text)
 
