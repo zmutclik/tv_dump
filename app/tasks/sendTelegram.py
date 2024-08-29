@@ -34,7 +34,7 @@ def get_pesan(db: Session, id_symbol: str):
     table = PrettyTable()
     table.field_names = ["days", "vol", "delta"]
     for x in range(8):
-        last = repo.last(symbol.symbol, symbol.timeframe, (symbol.waktu_date - timedelta(days=x)), symbol.waktu_time)
+        last = repo.find(symbol.symbol, symbol.timeframe, (symbol.waktu_date - timedelta(days=x)), symbol.waktu_time)
         if last is not None:
             table.add_row([last.waktu_date.strftime("%a"), last.volume, last.volume_delta])
 

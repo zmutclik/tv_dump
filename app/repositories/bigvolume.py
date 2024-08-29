@@ -23,7 +23,7 @@ class BigVolumeRepository:
         return (
             self.session.query(self.MainTable)
             .join(self.MainTable.SYMBOLS)
-            .filter(self.MainTable.status_open == True, SymbolTable.symbol == symbol)
+            .filter(self.MainTable.status_close == None, SymbolTable.symbol == symbol)
             .all()
         )
 

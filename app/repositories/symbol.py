@@ -21,7 +21,7 @@ class SymbolRepository:
     def parse_id(self, data):
         return data["symbol"] + "_" + str(data["timeframe"]) + "_" + str(int(data["waktu"].timestamp() * 1000))
 
-    def last(self, symbol: str, timeframe: int, waktu_date: date, waktu_time: time):
+    def find(self, symbol: str, timeframe: int, waktu_date: date, waktu_time: time):
         return (
             self.session.query(self.MainTable)
             .filter(
@@ -29,6 +29,17 @@ class SymbolRepository:
                 self.MainTable.timeframe == timeframe,
                 self.MainTable.waktu_date == waktu_date,
                 self.MainTable.waktu_time == waktu_time,
+            )
+            .order_by(self.MainTable.waktu.desc())
+            .first()
+        )
+
+    def last(self, symbol: str, timeframe: int):
+        return (
+            self.session.query(self.MainTable)
+            .filter(
+                self.MainTable.symbol == symbol,
+                self.MainTable.timeframe == timeframe,
             )
             .order_by(self.MainTable.waktu.desc())
             .first()

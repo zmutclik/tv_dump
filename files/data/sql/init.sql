@@ -18,12 +18,13 @@
 CREATE TABLE IF NOT EXISTS `bigvolume` (
   `id` varchar(50) NOT NULL DEFAULT '',
   `id_symbol` varchar(50) NOT NULL DEFAULT '',
-  `status_open` int(11) NOT NULL DEFAULT 1,
+  `status_close` datetime DEFAULT NULL,
+  `message_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `status_open` (`status_open`) USING BTREE,
-  KEY `id_symbol` (`id_symbol`) USING BTREE
+  KEY `id_symbol` (`id_symbol`) USING BTREE,
+  KEY `status_open` (`status_close`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.

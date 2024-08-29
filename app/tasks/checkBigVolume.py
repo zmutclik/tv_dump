@@ -41,16 +41,17 @@ def checkBigVolumeTasks(self, id_symbol: str):
                     if dataBidVolume.message_id is not None:
                         UpdateTelegramTasks.apply_async(args=[dataBidVolume.id, dataBidVolume.message_id])
 
+                if symbol.candle_closed and symbol.timeframe == 30:
+                    checkBigVolumeOpenClose(db, id_symbol, symbol.symbol)
 
-@shared_task(
-    bind=True,
-    autoretry_for=(Exception,),
-    retry_backoff=True,
-    retry_kwargs={"max_retries": 3},
-    name="tv_dump:checkBigVolumeOpenClose",
-)
-def checkBigVolumeOpenCloseTasks(self, symbol: str):
-    with engine_db.begin() as connection:
-        with Session(bind=connection) as db:
-            BigVolumeRepo = BigVolumeRepository(db)
-            dataBidVolume = BigVolumeRepo.get_opened(symbol)
+
+def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):
+    BigVolumeRepo = BigVolumeRepository(db)
+    dataBidVolume = BigVolumeRepo.get_opened(symbol)
+    reposymbol = SymbolRepository(db)
+    for item in dataBidVolume:
+        symbolcheck = reposymbol.get(item.id)
+        if id_symbol_triger != item.id:
+            symbolnow = reposymbol.last(symbol, symbolcheck.timeframe)
+            if symbolnow.close > symbolcheck.high or symbolnow.close < symbolcheck.low:
+                BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now()})
