@@ -14,14 +14,15 @@ from app.core.env import TELEGRAM_CHATID, TELEGRAM_TOKEN
 celery_log = get_task_logger(__name__)
 
 
-pesan = """<b><u>Big Volume Detected .!</u></b>
-<b>{}</b>
-`open  : {}`
-`high  : {}`
-`low   : {}`
-`close : {}`
+pesan = '''<b><u>Big Volume Detected .!</u></b>
 
-"""
+<b>{}</b>
+<code>open  : {}</code>
+<code>high  : {}</code>
+<code>low   : {}</code>
+<code>close : {}</code>
+
+'''
 
 
 def get_pesan(db: Session, id_symbol: str):
