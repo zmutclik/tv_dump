@@ -19,6 +19,7 @@ SessionLocal.configure(
     binds={
         models.SymbolTable: engine_db,
         models.BixVolumeTable: engine_db,
+        models.SignyalTable: engine_db,
     }
 )
 

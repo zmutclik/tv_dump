@@ -4,7 +4,7 @@ from app.models.__base import Base
 
 
 class SignyalTable(Base):
-    __tablename__ = "bigvolume"
+    __tablename__ = "signals"
 
     id = Column(String(50), primary_key=True, index=True)
     id_symbol = Column(String(50), ForeignKey("symbol.id"))
