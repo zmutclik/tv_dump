@@ -1,14 +1,13 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-from app.models.bigvolume import BixVolumeTable
-from app.models.symbol import SymbolTable
+from app.models.signyals import SignyalTable
 
 
-class BigVolumeRepository:
+class SignyalRepository:
     def __init__(self, db_session: Session) -> None:
         self.session: Session = db_session
-        self.MainTable = BixVolumeTable
+        self.MainTable = SignyalTable
 
     def get(self, id: str):
         return (
@@ -17,17 +16,6 @@ class BigVolumeRepository:
                 self.MainTable.id == id,
             )
             .first()
-        )
-
-    def get_opened(self, symbol: str):
-        return (
-            self.session.query(self.MainTable)
-            .join(self.MainTable.SYMBOLS)
-            .filter(
-                self.MainTable.status_close == None,
-                SymbolTable.symbol.like(symbol),
-            )
-            .all()
         )
 
     def create(self, dataIn):

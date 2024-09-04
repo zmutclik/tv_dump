@@ -45,6 +45,13 @@ class SymbolRepository:
             .first()
         )
 
+    def find_big_volume(self, symbol: str, timefilter: datetime):
+        return (
+            self.session.query(self.MainTable)
+            .filter(self.MainTable.symbol == symbol, self.MainTable.waktu > timefilter, (self.MainTable.volume / self.MainTable.volume_ma) > 1.8)
+            .first()
+        )
+
     def create(self, dataIn):
         data = self.MainTable(**dataIn)
         data.id = self.parse_id(dataIn)
