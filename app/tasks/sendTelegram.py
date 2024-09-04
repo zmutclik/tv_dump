@@ -1,7 +1,7 @@
 from celery import shared_task
 from sqlalchemy.orm import Session
 from celery.utils.log import get_task_logger
-from prettytable import PrettyTable,SINGLE_BORDER
+from prettytable import PrettyTable, SINGLE_BORDER
 
 import requests
 from datetime import datetime, date, timedelta
@@ -49,12 +49,12 @@ def get_pesan(db: Session, id_symbol: str):
     retry_kwargs={"max_retries": 3},
     name="tv_dump:send_telegram",
 )
-def SendTelegramTasks(self, id_symbol: str):
+def SendTelegramTasks(self, id_symbol: str, bot_chatID: str = None):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
             _pesan = get_pesan(db, id_symbol)
             if _pesan:
-                botrespon = telegram_bot_sendtext(_pesan)
+                botrespon = telegram_bot_sendtext(_pesan, bot_chatID=bot_chatID)
                 BigVolumeRepository(db).update(id_symbol, {"message_id": botrespon["result"]["message_id"]})
 
 
@@ -73,9 +73,10 @@ def UpdateTelegramTasks(self, id_symbol: str, message_id: int):
                 botrespon = telegram_bot_sendtext(_pesan, message_id)
 
 
-def telegram_bot_sendtext(bot_message: str, message_id: str = None, reply_to_message_id: str = None):
+def telegram_bot_sendtext(message: str, message_id: str = None, reply_to_message_id: str = None, bot_chatID: str = None):
     bot_token = TELEGRAM_TOKEN
-    bot_chatID = TELEGRAM_CHATID
+    if bot_chatID is None:
+        bot_chatID = TELEGRAM_CHATID
 
     url_param_1 = "sendMessage"
     url_param_2 = ""
@@ -91,7 +92,7 @@ def telegram_bot_sendtext(bot_message: str, message_id: str = None, reply_to_mes
         url_param_3 = "&reply_to_message_id={}".format(reply_to_message_id)
 
     send_url = "https://api.telegram.org/bot{}/{}?chat_id={}&parse_mode=html{}&text={}{}"
-    send_text = send_url.format(bot_token, url_param_1, bot_chatID, url_param_2, bot_message, url_param_3)
+    send_text = send_url.format(bot_token, url_param_1, bot_chatID, url_param_2, message, url_param_3)
 
     response = requests.get(send_text)
 

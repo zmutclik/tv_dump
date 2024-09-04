@@ -33,13 +33,20 @@ def signyalTasks(self, symbol: str):
                 symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
                 if symbolbv is not None:
                     if repoSi.get(symbolbv.id) is None:
+                        method = "BUY" if symbolbv.volume_delta < 0 else "SELL"
                         repoSi.create(
                             {
                                 "id": symbolbv.id,
                                 "id_symbol": symbolbv.id,
                                 "symbol": symbolbv.symbol,
                                 "waktu": datetime.now(),
-                                "method": "BUY" if symbolbv.volume_delta < 0 else "SELL",
+                                "method": method,
                                 "open": symbolbv.close,
                             }
+                        )
+
+                        pesan = "{} {} at {} "
+                        telegram_bot_sendtext(
+                            pesan.format(symbolbv.symbol, method, symbolbv.close),
+                            bot_chatID="-1002217712942",
                         )
