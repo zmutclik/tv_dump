@@ -32,13 +32,14 @@ def signyalTasks(self, symbol: str):
                 dt = dt.astimezone(to_timezone)
                 symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
                 if symbolbv is not None:
-                    repoSi.create(
-                        {
-                            "id": symbolbv.id,
-                            "id_symbol": symbolbv.id,
-                            "symbol": symbolbv.symbol,
-                            "waktu": datetime.now(),
-                            "method": "BUY" if symbolbv.volume_delta < 0 else "SELL",
-                            "open": symbolbv.close,
-                        }
-                    )
+                    if repoSi.get(symbolbv.id) is None:
+                        repoSi.create(
+                            {
+                                "id": symbolbv.id,
+                                "id_symbol": symbolbv.id,
+                                "symbol": symbolbv.symbol,
+                                "waktu": datetime.now(),
+                                "method": "BUY" if symbolbv.volume_delta < 0 else "SELL",
+                                "open": symbolbv.close,
+                            }
+                        )
