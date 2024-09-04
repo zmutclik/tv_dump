@@ -13,7 +13,7 @@ class SignyalTable(Base):
     method = Column(String(4), nullable=False)
 
     open = Column(Float)
-    sl = Column(Float)
-    tp = Column(Float)
+    sl = Column(Float, default=0)
+    tp = Column(Float, default=0)
 
     status_open = Column(Boolean, default=True)
