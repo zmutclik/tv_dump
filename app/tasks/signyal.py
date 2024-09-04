@@ -19,13 +19,13 @@ celery_log = get_task_logger(__name__)
     retry_kwargs={"max_retries": 3},
     name="tv_dump:Signyal",
 )
-def signyalTasks(self):
+def signyalTasks(self, symbol: str):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
             repoBV = BigVolumeRepository(db)
             repoSY = SymbolRepository(db)
             repoSi = SignyalRepository(db)
-            for item in repoBV.get_opened(""):
+            for item in repoBV.get_opened(symbol):
                 from_timezone = ZoneInfo("Asia/Jakarta")
                 to_timezone = ZoneInfo("Africa/Abidjan")
                 current_time_in_new_timezone = to_timezone.fromutc(item.waktu.astimezone(from_timezone))

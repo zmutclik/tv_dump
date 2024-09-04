@@ -6,6 +6,7 @@ from celery.utils.log import get_task_logger
 from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository
 from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks, telegram_bot_sendtext
+from app.tasks.signyal import signyalTasks
 
 
 celery_log = get_task_logger(__name__)
@@ -44,6 +45,8 @@ def checkBigVolumeTasks(self, id_symbol: str):
                 if symbol.candle_closed and symbol.timeframe == 30:
                     checkBigVolumeOpenClose(db, id_symbol, symbol.symbol)
 
+                signyalTasks.apply_async(args=[symbol.symbol])
+
 
 def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):
     BigVolumeRepo = BigVolumeRepository(db)
@@ -56,8 +59,8 @@ def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):
             if symbolnow.close > symbolcheck.high or symbolnow.close < symbolcheck.low:
                 pesan = "{} udah break {} sekarang posisi di {}"
                 if symbolnow.close > symbolcheck.high:
-                    BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(),"status_break":"high"})
+                    BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(), "status_break": "high"})
                     telegram_bot_sendtext(pesan.format(symbolnow.symbol, "HIGH", symbolnow.close), None, item.message_id)
                 if symbolnow.close < symbolcheck.high:
-                    BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(),"status_break":"low"})
+                    BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(), "status_break": "low"})
                     telegram_bot_sendtext(pesan.format(symbolnow.symbol, "LOW", symbolnow.close), None, item.message_id)
