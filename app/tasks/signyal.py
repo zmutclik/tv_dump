@@ -7,7 +7,7 @@ from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository, SignyalRepository
 from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks, telegram_bot_sendtext
 
-from zoneinfo import ZoneInfo
+import pytz
 
 celery_log = get_task_logger(__name__)
 
@@ -26,10 +26,12 @@ def signyalTasks(self, symbol: str):
             repoSY = SymbolRepository(db)
             repoSi = SignyalRepository(db)
             for item in repoBV.get_opened(symbol):
-                from_timezone = ZoneInfo("Asia/Jakarta")
-                to_timezone = ZoneInfo("Africa/Abidjan")
-                current_time_in_new_timezone = to_timezone.fromutc(item.created_at.astimezone(from_timezone))
-                symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, current_time_in_new_timezone)
+                from_timezone = pytz.timezone("Asia/Jakarta")
+                to_timezone = pytz.timezone("UTC")
+                dt = datetime.strptime(item.created_at, "%Y-%m-%d %H:%M:%S")
+                dt = from_timezone.localize(dt)
+                dt = dt.astimezone(to_timezone)
+                symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
                 if symbolbv is not None:
                     repoSi.create(
                         {
