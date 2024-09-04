@@ -28,8 +28,7 @@ def signyalTasks(self, symbol: str):
             for item in repoBV.get_opened(symbol):
                 from_timezone = pytz.timezone("Asia/Jakarta")
                 to_timezone = pytz.timezone("UTC")
-                dt = datetime.strptime(item.created_at, "%Y-%m-%d %H:%M:%S")
-                dt = from_timezone.localize(dt)
+                dt = from_timezone.localize(item.created_at)
                 dt = dt.astimezone(to_timezone)
                 symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
                 if symbolbv is not None:
