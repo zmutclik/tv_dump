@@ -12,8 +12,7 @@ class BixVolumeTable(Base):
     status_close = Column(DateTime, nullable=True)
     status_break = Column(String(4), nullable=True)
 
-    created_signyal = Column(DateTime, nullable=True)
-    check_signyal = Column(DateTime, nullable=True)
+    counter_signyal = Column(DateTime, nullable=True)
     
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, nullable=False)

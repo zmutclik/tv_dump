@@ -32,28 +32,29 @@ def signyalCounterTasks(self, symbol: str):
                 dt = dt.astimezone(to_timezone)
                 symbol = repoSY.get(item.id_symbol)
                 symbol_method = "BUY" if symbol.volume_delta < 0 else "SELL"
+                if item.counter_signyal is not None:
+                    symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
+                    if symbolbv is not None:
+                        if repoSi.get(symbolbv.id) is None:
+                            method = "BUY" if symbolbv.volume_delta < 0 else "SELL"
+                            if symbol_method != method:
+                                tp = symbolbv.open if symbolbv.volume_delta < 0 else symbolbv.close
+                                repoSi.create(
+                                    {
+                                        "id": symbolbv.id,
+                                        "id_symbol": symbolbv.id,
+                                        "nama": "big_volume_counter",
+                                        "symbol": symbolbv.symbol,
+                                        "waktu": datetime.now(),
+                                        "method": method,
+                                        "open": symbolbv.close,
+                                        "tp": tp,
+                                    }
+                                )
 
-                symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
-                if symbolbv is not None:
-                    if repoSi.get(symbolbv.id) is None:
-                        method = "BUY" if symbolbv.volume_delta < 0 else "SELL"
-                        if symbol_method != method:
-                            tp = symbolbv.open if symbolbv.volume_delta < 0 else symbolbv.close
-                            repoSi.create(
-                                {
-                                    "id": symbolbv.id,
-                                    "id_symbol": symbolbv.id,
-                                    "nama": "big_volume_counter",
-                                    "symbol": symbolbv.symbol,
-                                    "waktu": datetime.now(),
-                                    "method": method,
-                                    "open": symbolbv.close,
-                                    "tp": tp,
-                                }
-                            )
-
-                            pesan = "Signyal Counter {} {} at {} "
-                            telegram_bot_sendtext(
-                                pesan.format(symbolbv.symbol, method, symbolbv.close),
-                                bot_chatID="-1002217712942",
-                            )
+                                repoBV.update(item.id, {"counter_signyal": datetime.now()})
+                                pesan = "Signyal Counter {} {} at {} TP {}"
+                                telegram_bot_sendtext(
+                                    pesan.format(symbolbv.symbol, method, symbolbv.close, tp),
+                                    bot_chatID="-1002217712942",
+                                )

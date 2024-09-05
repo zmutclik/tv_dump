@@ -37,7 +37,7 @@ class BigVolumeRepository:
         self.session.refresh(data)
         return data
 
-    def update(self, id: int, dataIn: dict):
+    def update(self, id: str, dataIn: dict):
         dataIn_update = dataIn if type(dataIn) is dict else dataIn.__dict__
         (
             self.session.query(self.MainTable)
