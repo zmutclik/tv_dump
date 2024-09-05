@@ -9,6 +9,7 @@ class SignyalTable(Base):
     id = Column(String(50), primary_key=True, index=True)
     id_symbol = Column(String(50), ForeignKey("symbol.id"))
     symbol = Column(String(50), index=True)
+    nama = Column(String(50), index=True)
     waktu = Column(DateTime, index=True)
     method = Column(String(4), nullable=False)
 

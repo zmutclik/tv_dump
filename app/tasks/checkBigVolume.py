@@ -6,7 +6,7 @@ from celery.utils.log import get_task_logger
 from app.core.database import engine_db
 from app.repositories import SymbolRepository, BigVolumeRepository
 from app.tasks.sendTelegram import SendTelegramTasks, UpdateTelegramTasks, telegram_bot_sendtext
-from app.tasks.signyal import signyalTasks
+from app.tasks.signyal import signyalCounterTasks
 
 
 celery_log = get_task_logger(__name__)
@@ -45,7 +45,7 @@ def checkBigVolumeTasks(self, id_symbol: str):
                 if symbol.candle_closed and symbol.timeframe == 30:
                     checkBigVolumeOpenClose(db, id_symbol, symbol.symbol)
 
-                signyalTasks.apply_async(args=[symbol.symbol])
+                signyalCounterTasks.apply_async(args=[symbol.symbol])
 
 
 def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):

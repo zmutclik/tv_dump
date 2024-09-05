@@ -19,7 +19,7 @@ celery_log = get_task_logger(__name__)
     retry_kwargs={"max_retries": 3},
     name="tv_dump:Signyal",
 )
-def signyalTasks(self, symbol: str):
+def signyalCounterTasks(self, symbol: str):
     with engine_db.begin() as connection:
         with Session(bind=connection) as db:
             repoBV = BigVolumeRepository(db)
@@ -30,23 +30,30 @@ def signyalTasks(self, symbol: str):
                 to_timezone = pytz.timezone("UTC")
                 dt = from_timezone.localize(item.created_at)
                 dt = dt.astimezone(to_timezone)
+                symbol = repoSY.get(item.id_symbol)
+                symbol_method = "BUY" if symbol.volume_delta < 0 else "SELL"
+
                 symbolbv = repoSY.find_big_volume(item.SYMBOLS.symbol, dt)
                 if symbolbv is not None:
                     if repoSi.get(symbolbv.id) is None:
                         method = "BUY" if symbolbv.volume_delta < 0 else "SELL"
-                        repoSi.create(
-                            {
-                                "id": symbolbv.id,
-                                "id_symbol": symbolbv.id,
-                                "symbol": symbolbv.symbol,
-                                "waktu": datetime.now(),
-                                "method": method,
-                                "open": symbolbv.close,
-                            }
-                        )
+                        if symbol_method != method:
+                            tp = symbolbv.open if symbolbv.volume_delta < 0 else symbolbv.close
+                            repoSi.create(
+                                {
+                                    "id": symbolbv.id,
+                                    "id_symbol": symbolbv.id,
+                                    "nama": "big_volume_counter",
+                                    "symbol": symbolbv.symbol,
+                                    "waktu": datetime.now(),
+                                    "method": method,
+                                    "open": symbolbv.close,
+                                    "tp": tp,
+                                }
+                            )
 
-                        pesan = "{} {} at {} "
-                        telegram_bot_sendtext(
-                            pesan.format(symbolbv.symbol, method, symbolbv.close),
-                            bot_chatID="-1002217712942",
-                        )
+                            pesan = "Signyal Counter {} {} at {} "
+                            telegram_bot_sendtext(
+                                pesan.format(symbolbv.symbol, method, symbolbv.close),
+                                bot_chatID="-1002217712942",
+                            )
