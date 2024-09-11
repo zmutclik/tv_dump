@@ -57,10 +57,10 @@ def checkBigVolumeOpenClose(db: Session, id_symbol_triger: str, symbol: str):
         if id_symbol_triger != item.id:
             symbolnow = reposymbol.last(symbol, symbolcheck.timeframe)
             if symbolnow.close > symbolcheck.high or symbolnow.close < symbolcheck.low:
-                pesan = "{} udah break {} sekarang posisi di {}"
+                # pesan = "{} udah break {} sekarang posisi di {}"
                 if symbolnow.close > symbolcheck.high:
                     BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(), "status_break": "high"})
-                    telegram_bot_sendtext(pesan.format(symbolnow.symbol, "HIGH", symbolnow.close), None, item.message_id)
+                    # telegram_bot_sendtext(pesan.format(symbolnow.symbol, "HIGH", symbolnow.close), None, item.message_id)
                 if symbolnow.close < symbolcheck.high:
                     BigVolumeRepo.update(symbolcheck.id, {"status_close": datetime.now(), "status_break": "low"})
-                    telegram_bot_sendtext(pesan.format(symbolnow.symbol, "LOW", symbolnow.close), None, item.message_id)
+                    # telegram_bot_sendtext(pesan.format(symbolnow.symbol, "LOW", symbolnow.close), None, item.message_id)
